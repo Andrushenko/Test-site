@@ -1,0 +1,50 @@
+<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+<script type="text/javascript">
+var myMap, myPlacemark, coords;
+ymaps.ready(init);
+function init () {
+myMap = new ymaps.Map('YMapsID', {center: [55.7465, 37.6274],zoom: 10,behaviors: ['default', 'scrollZoom']});
+myMap.controls.add('zoomControl').add('typeSelector');
+coords = [56.326944, 44.0075];myPlacemark = new ymaps.Placemark(coords,{iconContent: "Новость"}, {preset: "twirl#nightStretchyIcon", draggable: true});
+myMap.geoObjects.add(myPlacemark);myPlacemark.events.add("dragend", function (e) {
+coords = this.geometry.getCoordinates();
+savecoordinats();
+}, myPlacemark);
+
+myMap.events.add('click', function (e) {
+coords = e.get('coordPosition');
+savecoordinats();
+});
+}
+function do_search() {
+var town = $("#city :selected").text();
+var country = $("#country :selected").text();
+var poisk = country + ", " + town;
+ymaps.geocode(poisk, { results: 1 }).then(function (res) {
+var firstGeoObject = res.geoObjects.get(0);
+myMap.setCenter(firstGeoObject.geometry.getCoordinates(), 10);
+});
+}
+
+function do_search_street() {
+var town = $("#city :selected").text();
+var country = $("#country :selected").text();
+var steet = $("#street").val();
+var poisk = country + ", " + town + ", " + steet;
+ymaps.geocode(poisk, { results: 1 }).then(function (res) {
+var firstGeoObject = res.geoObjects.get(0);
+myMap.setCenter(firstGeoObject.geometry.getCoordinates(), 14);
+coords = firstGeoObject.geometry.getCoordinates();
+savecoordinats();
+});
+}
+
+
+function savecoordinats (){
+var new_coords = [coords[0].toFixed(4), coords[1].toFixed(4)];
+myPlacemark.getOverlay().getData().geometry.setCoordinates(new_coords);
+document.getElementById("latlongmet").value = coords[0].toFixed(4);
+document.getElementById("mapzoom").value = coords[1].toFixed(4);
+}
+
+</script> 

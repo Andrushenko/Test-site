@@ -1,0 +1,8 @@
+$('#btn').on('click', function() {
+  $('input.hidden').val(this.id);
+  console.log(this.id);
+});
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<button id="btn">Кнопка</button>
+<input type="hidden" class="hidden" />
